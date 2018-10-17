@@ -27,7 +27,6 @@ public class EditActivity extends AppCompatActivity {
     private String oldname, oldch, pos;
     private boolean edit = false, check = false;
 
-    //создание кноки add
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.edit_menu, menu);
