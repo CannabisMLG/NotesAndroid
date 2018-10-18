@@ -41,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
 
     private final int MENU_EDIT = 1, MENU_DELETE = 2;
 
+    /**
+     * Метод, выполняющийся при создании активити
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +58,10 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editItem();
+                Intent intent = new Intent(th, EditActivity.class);
+                intent.putExtra("title", "Создание");
+                intent.putExtra("type", "");
+                startActivityForResult(intent, 0);
             }
         });
 
@@ -85,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
         SQLiteDatabase dataBase = dbHelper.getWritableDatabase();
 
         Cursor cursor = dataBase.query("films", null,null,null,null,null,null);
-        //dataBase.delete("films", null, null);
         if(cursor.moveToFirst())
         {
             int idName = cursor.getColumnIndex("name");
@@ -102,9 +108,9 @@ public class MainActivity extends AppCompatActivity {
                     itemsnp.add(new Item(cursor.getString(idName), Double.parseDouble(cursor.getString(idmyRate)), Double.parseDouble(cursor.getString(idkpRate)),cursor.getInt(idCh)));
                 }
             }while(cursor.moveToNext());
-            refNP();
+            refNCF();
 
-            refP();
+            refCF();
         }
         else Log.d("mLog", "Член");
         cursor.close();
@@ -137,6 +143,12 @@ public class MainActivity extends AppCompatActivity {
         registerForContextMenu(lvnp);
     }
 
+    /**
+     * Метод, отвечающий за создание контекстного меню
+     * @param menu
+     * @param v
+     * @param menuInfo
+     */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         menu.add(0, MENU_EDIT, 0, "Редактировать");
@@ -152,6 +164,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Метод, отвечающий за обработку нажатий на элементы контекстного меню
+     * @param item
+     * @return
+     */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId())
@@ -163,14 +180,14 @@ public class MainActivity extends AppCompatActivity {
                     dataBase.delete("films", "name= ?", new String[]{itemsp.get(cPos).getName()});
                     deleteFile(itemsp.get(cPos).getName());
                     itemsp.remove(cPos);
-                    refP();
+                    refCF();
                 }
                 else
                 {
                     dataBase.delete("films", "name= ?", new String[]{itemsnp.get(cPos).getName()});
                     deleteFile(itemsnp.get(cPos).getName());
                     itemsnp.remove(cPos);
-                    refNP();
+                    refNCF();
                 }
                 break;
             case MENU_EDIT:
@@ -186,87 +203,11 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 0) {
-            if (resultCode == -2) {
-                if (data.getStringExtra("ch").equals("1")) {
-                    itemsp.add(new Item(data.getStringExtra("name"), Double.parseDouble(data.getStringExtra("myRate")), Double.parseDouble(data.getStringExtra("kpRate")), Integer.parseInt(data.getStringExtra("ch"))));
-                    refP();
-                } else {
-                    itemsnp.add(new Item(data.getStringExtra("name"), Double.parseDouble(data.getStringExtra("myRate")), Double.parseDouble(data.getStringExtra("kpRate")), Integer.parseInt(data.getStringExtra("ch"))));
-                    refNP();
-                }
-                SQLiteDatabase dataBase = dbHelper.getWritableDatabase();
-                ContentValues contentValues = new ContentValues();
-
-                contentValues.put("name", data.getStringExtra("name"));
-                contentValues.put("kpRate", data.getStringExtra("kpRate"));
-                contentValues.put("ch", data.getStringExtra("ch"));
-                contentValues.put("myRate", data.getStringExtra("myRate"));
-                dataBase.insert("films", null, contentValues);
-            } else Toast.makeText(MainActivity.this, "Не создано", Toast.LENGTH_SHORT).show();
-        }
-        if(requestCode == 1)
-        {
-            if(resultCode == RESULT_OK)
-            {
-                SQLiteDatabase dataBase = dbHelper.getWritableDatabase();
-                dataBase.delete("films", "name= ?", new String[]{data.getStringExtra("name")});
-                deleteFile(data.getStringExtra("name"));
-                if(data.getStringExtra("ch").equals("1"))
-                {
-                    itemsp.remove(Integer.parseInt(data.getStringExtra("position")));
-                    refP();
-                }
-                else
-                {
-                    itemsnp.remove(Integer.parseInt(data.getStringExtra("position")));
-                    refNP();
-                }
-            }
-            if(resultCode == -2)
-            {
-                SQLiteDatabase dataBase = dbHelper.getWritableDatabase();
-                ContentValues contentValues = new ContentValues();
-
-                contentValues.put("name", data.getStringExtra("name"));
-                contentValues.put("kpRate", data.getStringExtra("kpRate"));
-                contentValues.put("ch", data.getStringExtra("ch"));
-                contentValues.put("myRate", data.getStringExtra("myRate"));
-                Log.d("mLogs", data.getStringExtra("oldname"));
-                dataBase.update("films", contentValues, "name=?", new String[]{data.getStringExtra("oldname")});
-                //deleteFile(data.getStringExtra("oldname"));
-                if(data.getStringExtra("ch").equals("1"))
-                {
-                    if(data.getStringExtra("oldch").equals("1")){
-                        itemsp.remove(Integer.parseInt(data.getStringExtra("position")));
-                    }
-                    else {
-                        itemsnp.remove(Integer.parseInt(data.getStringExtra("position")));
-                        refNP();
-                    }
-                    itemsp.add(Integer.parseInt(data.getStringExtra("position")),
-                            new Item(
-                                    data.getStringExtra("name"),
-                                    Double.parseDouble(data.getStringExtra("myRate")),
-                                    Double.parseDouble(data.getStringExtra("kpRate")),
-                                    Integer.parseInt(data.getStringExtra("ch"))));
-                    refP();
-                }
-                else{
-                    if(data.getStringExtra("oldch").equals("1")){
-                        itemsp.remove(Integer.parseInt(data.getStringExtra("position")));
-                        refP();
-                    }
-                    else itemsnp.remove(Integer.parseInt(data.getStringExtra("position")));
-                    itemsnp.add(Integer.parseInt(data.getStringExtra("position")), new Item(data.getStringExtra("name"), Double.parseDouble(data.getStringExtra("myRate")), Double.parseDouble(data.getStringExtra("kpRate")), Integer.parseInt(data.getStringExtra("ch"))));
-                    refNP();
-                }
-            }
-        }
-    }
-
+    /**
+     * Метод, создающий OptionMenu
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -290,16 +231,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }*/
 
-
-    public void editItem()
-    {
-        Intent intent = new Intent(this, EditActivity.class);
-        intent.putExtra("title", "Создание");
-        intent.putExtra("type", "");
-        startActivityForResult(intent, 0);
-    }
-
-    public void refP()
+    /**
+     * Метод, обновляющий данные в списке просмотренных фильмов
+     */
+    public void refCF()
     {
         String[] namesp = new String[itemsp.size()];
         for (int i = 0;i<itemsp.size();i++)
@@ -309,7 +244,10 @@ public class MainActivity extends AppCompatActivity {
         adapterp = new ArrayAdapter<>(this, R.layout.list_item, namesp);
         lvp.setAdapter(adapterp);
     }
-    public void refNP()
+    /**
+     * Метод, обновляющий данные в списке просмотренных фильмов
+     */
+    public void refNCF()
     {
         String[] namesnp = new String[itemsnp.size()];
         for (int i = 0;i<itemsnp.size();i++)
@@ -318,5 +256,96 @@ public class MainActivity extends AppCompatActivity {
         }
         adapternp = new ArrayAdapter<>(this, R.layout.list_item, namesnp);
         lvnp.setAdapter(adapternp);
+    }
+
+    /**
+     * Метод, обрабатывающий значение, возвращенное каким-либо активити
+     * */
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        /**
+         * Этот блок отвечает за обработку значений, возвращенных при создании нового элемента
+         */
+        if(requestCode == 0) {
+            if (resultCode == -2) {
+                if (data.getStringExtra("ch").equals("1")) {
+                    itemsp.add(new Item(data.getStringExtra("name"), Double.parseDouble(data.getStringExtra("myRate")), Double.parseDouble(data.getStringExtra("kpRate")), Integer.parseInt(data.getStringExtra("ch"))));
+                    refCF();
+                } else {
+                    itemsnp.add(new Item(data.getStringExtra("name"), Double.parseDouble(data.getStringExtra("myRate")), Double.parseDouble(data.getStringExtra("kpRate")), Integer.parseInt(data.getStringExtra("ch"))));
+                    refNCF();
+                }
+                SQLiteDatabase dataBase = dbHelper.getWritableDatabase();
+                ContentValues contentValues = new ContentValues();
+
+                contentValues.put("name", data.getStringExtra("name"));
+                contentValues.put("kpRate", data.getStringExtra("kpRate"));
+                contentValues.put("ch", data.getStringExtra("ch"));
+                contentValues.put("myRate", data.getStringExtra("myRate"));
+                dataBase.insert("films", null, contentValues);
+            } else Toast.makeText(MainActivity.this, "Не создано", Toast.LENGTH_SHORT).show();
+        }
+
+        /**
+         * Этот блок отвечает за обработку значений, возвращенных при редактировании или удалении элемента
+         */
+        if(requestCode == 1)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                SQLiteDatabase dataBase = dbHelper.getWritableDatabase();
+                dataBase.delete("films", "name= ?", new String[]{data.getStringExtra("name")});
+                deleteFile(data.getStringExtra("name"));
+                if(data.getStringExtra("ch").equals("1"))
+                {
+                    itemsp.remove(Integer.parseInt(data.getStringExtra("position")));
+                    refCF();
+                }
+                else
+                {
+                    itemsnp.remove(Integer.parseInt(data.getStringExtra("position")));
+                    refNCF();
+                }
+            }
+            if(resultCode == -2)
+            {
+                SQLiteDatabase dataBase = dbHelper.getWritableDatabase();
+                ContentValues contentValues = new ContentValues();
+
+                contentValues.put("name", data.getStringExtra("name"));
+                contentValues.put("kpRate", data.getStringExtra("kpRate"));
+                contentValues.put("ch", data.getStringExtra("ch"));
+                contentValues.put("myRate", data.getStringExtra("myRate"));
+                Log.d("mLogs", data.getStringExtra("oldname"));
+                dataBase.update("films", contentValues, "name=?", new String[]{data.getStringExtra("oldname")});
+                //deleteFile(data.getStringExtra("oldname"));
+                if(data.getStringExtra("ch").equals("1"))
+                {
+                    if(data.getStringExtra("oldch").equals("1")){
+                        itemsp.remove(Integer.parseInt(data.getStringExtra("position")));
+                    }
+                    else {
+                        itemsnp.remove(Integer.parseInt(data.getStringExtra("position")));
+                        refNCF();
+                    }
+                    itemsp.add(Integer.parseInt(data.getStringExtra("position")),
+                            new Item(
+                                    data.getStringExtra("name"),
+                                    Double.parseDouble(data.getStringExtra("myRate")),
+                                    Double.parseDouble(data.getStringExtra("kpRate")),
+                                    Integer.parseInt(data.getStringExtra("ch"))));
+                    refCF();
+                }
+                else{
+                    if(data.getStringExtra("oldch").equals("1")){
+                        itemsp.remove(Integer.parseInt(data.getStringExtra("position")));
+                        refCF();
+                    }
+                    else itemsnp.remove(Integer.parseInt(data.getStringExtra("position")));
+                    itemsnp.add(Integer.parseInt(data.getStringExtra("position")), new Item(data.getStringExtra("name"), Double.parseDouble(data.getStringExtra("myRate")), Double.parseDouble(data.getStringExtra("kpRate")), Integer.parseInt(data.getStringExtra("ch"))));
+                    refNCF();
+                }
+            }
+        }
     }
 }
