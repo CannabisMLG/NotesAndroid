@@ -17,6 +17,18 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <EditText
+                android:id="@+id/editType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="7dp"
+                android:editable="false"
+                android:ems="10"
+                android:hint="Тип"
+                android:inputType="textAutoComplete" />
+
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"

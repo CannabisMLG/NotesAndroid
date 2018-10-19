@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/popup_book"
+        android:title="Книга" />
+    <item
+        android:id="@+id/popup_game"
+        android:title="Игра" />
+    <item
+        android:id="@+id/popup_film"
+        android:title="Фильм" />
+</menu>

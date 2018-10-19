@@ -4,18 +4,20 @@ public class Item {
     private String name;
     private double myRate, kpRate;
     private int ch;
+    private String type;
 
     public Item()
     {
-        this("", 0, 0, 0);
+        this("", 0, 0, 0, "");
     }
 
-    public Item(String name, double myRate, double kpRate, int ch)
+    public Item(String name, double myRate, double kpRate, int ch, String type)
     {
         setName(name);
         setMyRate(myRate);
         setKpRate(kpRate);
         setCh(ch);
+        setType(type);
     }
 
     public void setName(String name) {
@@ -34,6 +36,10 @@ public class Item {
         this.ch = ch;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public String getName() {
         return name;
     }
@@ -48,5 +54,9 @@ public class Item {
 
     public String getMyRate() {
         return myRate+"";
+    }
+
+    public String getType() {
+        return type;
     }
 }

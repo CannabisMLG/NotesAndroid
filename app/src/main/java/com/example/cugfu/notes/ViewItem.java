@@ -32,6 +32,7 @@ public class ViewItem extends AppCompatActivity {
     private boolean ch = false;
     private DBhelper db;
     private final int is_ch = -5500, not_ch = -5550;
+    private String cath = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +72,7 @@ public class ViewItem extends AppCompatActivity {
         }
         name = intent.getStringExtra("name");
         pos = intent.getStringExtra("position");
+        cath = intent.getStringExtra("cath");
     }
 
     @Override
@@ -78,8 +80,18 @@ public class ViewItem extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.view_menu, menu);
 
-        if(ch) menu.add(Menu.NONE, is_ch, Menu.NONE, "Отметить как непросмотренное");
-        else menu.add(Menu.NONE, not_ch, Menu.NONE, "Отметить как просмотренное");
+        if(ch)
+        {
+            if(cath.equals("films"))menu.add(Menu.NONE, is_ch, Menu.NONE, "Отметить как непросмотренное");
+            if(cath.equals("games"))menu.add(Menu.NONE, is_ch, Menu.NONE, "Отметить как непройденное");
+            if(cath.equals("books"))menu.add(Menu.NONE, is_ch, Menu.NONE, "Отметить как непрочитанное");
+        }
+        else
+        {
+            if(cath.equals("films"))menu.add(Menu.NONE, is_ch, Menu.NONE, "Отметить как просмотренное");
+            if(cath.equals("games"))menu.add(Menu.NONE, is_ch, Menu.NONE, "Отметить как пройденное");
+            if(cath.equals("books"))menu.add(Menu.NONE, is_ch, Menu.NONE, "Отметить как прочитанное");
+        }
         return true;
     }
 
@@ -171,6 +183,7 @@ public class ViewItem extends AppCompatActivity {
             intent.putExtra("myRate", data.getStringExtra("myRate"));
             intent.putExtra("ch", data.getStringExtra("ch"));
             intent.putExtra("position", pos + "");
+            intent.putExtra("type", data.getStringExtra("type"));
             setResult(-2, intent);
             finish();
         }

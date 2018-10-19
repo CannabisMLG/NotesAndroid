@@ -1,5 +1,6 @@
 package com.example.cugfu.notes;
 
+import android.content.ClipData;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -32,12 +33,15 @@ public class MainActivity extends AppCompatActivity {
 
     private LinkedList<Item> itemsnp = new LinkedList<>();
     private LinkedList<Item> itemsp = new LinkedList<>();
-    ArrayAdapter<String> adapternp, adapterp;
+    private ArrayAdapter<String> adapternp, adapterp;
     private Item tItem;
     private ListView lvnp, lvp;
     private DBhelper dbHelper;
     private int cPos;
     private boolean flag = false;
+    private BottomNavigationView bnv;
+    private String type = "films";
+    private Toolbar tb;
 
     private final int MENU_EDIT = 1, MENU_DELETE = 2;
 
@@ -50,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarmain);
-        //setSupportActionBar(toolbar);
+        tb = toolbar;
+        setSupportActionBar(toolbar);
 
         final MainActivity th = this;
 
@@ -68,7 +73,8 @@ public class MainActivity extends AppCompatActivity {
         lvnp = (ListView) findViewById(R.id.listNP);
         lvp = (ListView) findViewById(R.id.listP);
         dbHelper = new DBhelper(this);
-        BottomNavigationView bnv = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
+
+        bnv = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
         bnv.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -98,18 +104,20 @@ public class MainActivity extends AppCompatActivity {
             int idkpRate = cursor.getColumnIndex("kpRate");
             int idCh = cursor.getColumnIndex("ch");
             int idmyRate = cursor.getColumnIndex("myRate");
+            int idType = cursor.getColumnIndex("type");
             do {
                 if(cursor.getString(idCh).equals("1"))
                 {
-                    itemsp.add(new Item(cursor.getString(idName), Double.parseDouble(cursor.getString(idmyRate)), Double.parseDouble(cursor.getString(idkpRate)),cursor.getInt(idCh)));
+                    itemsp.add(new Item(cursor.getString(idName), Double.parseDouble(cursor.getString(idmyRate)), Double.parseDouble(cursor.getString(idkpRate)),cursor.getInt(idCh), cursor.getString(idType)));
                 }
                 else
                 {
-                    itemsnp.add(new Item(cursor.getString(idName), Double.parseDouble(cursor.getString(idmyRate)), Double.parseDouble(cursor.getString(idkpRate)),cursor.getInt(idCh)));
+                    itemsnp.add(new Item(cursor.getString(idName), Double.parseDouble(cursor.getString(idmyRate)), Double.parseDouble(cursor.getString(idkpRate)),cursor.getInt(idCh), cursor.getString(idType)));
+                    Log.d("mLog", cursor.getString(idType));
                 }
             }while(cursor.moveToNext());
-            refNCF();
 
+            refNCF();
             refCF();
         }
         else Log.d("mLog", "Член");
@@ -124,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("kpRate", itemsnp.get(position).getKpRate());
                 intent.putExtra("ch", itemsnp.get(position).isCh());
                 intent.putExtra("position", position+"");
+                intent.putExtra("cath", type);
                 startActivityForResult(intent, 1);
             }
         });
@@ -136,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("kpRate", itemsp.get(position).getKpRate());
                 intent.putExtra("ch", itemsp.get(position).isCh());
                 intent.putExtra("position", position+"");
+                intent.putExtra("cath", type);
                 startActivityForResult(intent, 1);
             }
         });
@@ -216,30 +226,100 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //@Override
-   /* public boolean onOptionsItemSelected(MenuItem item) {
+   public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+       int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.lastBM) {
-            Log.d("mLogs", "хуй");
+        if (id == R.id.choose_books) {
+            tb.setTitle("Книги");
+            bnv.getMenu().getItem(0).setTitle("Непрочитанные");
+            bnv.getMenu().getItem(1).setTitle("Прочитанные");
+            type = "books";
+            refCF();
+            refNCF();
             return true;
         }
+       if (id == R.id.choose_films) {
+           tb.setTitle("Фильмы");
+           bnv.getMenu().getItem(0).setTitle("Непросмотренные");
+           bnv.getMenu().getItem(1).setTitle("Просмотренные");
+           type = "films";
+           refCF();
+           refNCF();
+           return true;
+       }
+       if (id == R.id.choose_games) {
+           tb.setTitle("Игры");
+           bnv.getMenu().getItem(0).setTitle("Непройденные");
+           bnv.getMenu().getItem(1).setTitle("Пройденные");
+           type = "games";
+           refCF();
+           refNCF();
+           return true;
+       }
 
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 
     /**
      * Метод, обновляющий данные в списке просмотренных фильмов
      */
     public void refCF()
     {
-        String[] namesp = new String[itemsp.size()];
-        for (int i = 0;i<itemsp.size();i++)
+        String[] namesp = null;
+        if(type.equals("films"))
         {
-            namesp[i] = itemsp.get(i).getName();
+            int k = 0;
+            for(int i = 0;i < itemsp.size();i++)
+            {
+                if(itemsp.get(i).getType().equals("Фильм")) k++;
+            }
+            namesp = new String[k];
+            k = 0;
+            for(int i = 0;i < itemsp.size();i++)
+            {
+                if(itemsp.get(i).getType().equals("Фильм")) {
+                    namesp[k] = itemsp.get(i).getName();
+                    k++;
+                }
+            }
+        }
+        if(type.equals("books"))
+        {
+            int k = 0;
+            for(int i = 0;i < itemsp.size();i++)
+            {
+                if(itemsp.get(i).getType().equals("Книга")) k++;
+            }
+            namesp = new String[k];
+            k = 0;
+            for(int i = 0;i < itemsp.size();i++)
+            {
+                if(itemsp.get(i).getType().equals("Книга")) {
+                    namesp[k] = itemsp.get(i).getName();
+                    k++;
+                }
+            }
+        }
+        if(type.equals("games"))
+        {
+            int k = 0;
+            for(int i = 0;i < itemsp.size();i++)
+            {
+                if(itemsp.get(i).getType().equals("Игра")) k++;
+            }
+            namesp = new String[k];
+            k = 0;
+            for(int i = 0;i < itemsp.size();i++)
+            {
+                if(itemsp.get(i).getType().equals("Игра")) {
+                    namesp[k] = itemsp.get(i).getName();
+                    k++;
+                }
+            }
         }
         adapterp = new ArrayAdapter<>(this, R.layout.list_item, namesp);
         lvp.setAdapter(adapterp);
@@ -249,10 +329,57 @@ public class MainActivity extends AppCompatActivity {
      */
     public void refNCF()
     {
-        String[] namesnp = new String[itemsnp.size()];
-        for (int i = 0;i<itemsnp.size();i++)
+        String[] namesnp = null;
+        if(type.equals("films"))
         {
-            namesnp[i] = itemsnp.get(i).getName();
+            int k = 0;
+            for(int i = 0;i < itemsnp.size();i++)
+            {
+                if(itemsnp.get(i).getType().equals("Фильм")) k++;
+            }
+            namesnp = new String[k];
+            k = 0;
+            for(int i = 0;i < itemsnp.size();i++)
+            {
+                if(itemsnp.get(i).getType().equals("Фильм")) {
+                    namesnp[k] = itemsnp.get(i).getName();
+                    k++;
+                }
+            }
+        }
+        if(type.equals("books"))
+        {
+            int k = 0;
+            for(int i = 0;i < itemsnp.size();i++)
+            {
+                if(itemsnp.get(i).getType().equals("Книга")) k++;
+            }
+            namesnp = new String[k];
+            k = 0;
+            for(int i = 0;i < itemsnp.size();i++)
+            {
+                if(itemsnp.get(i).getType().equals("Книга")) {
+                    namesnp[k] = itemsnp.get(i).getName();
+                    k++;
+                }
+            }
+        }
+        if(type.equals("games"))
+        {
+            int k = 0;
+            for(int i = 0;i < itemsnp.size();i++)
+            {
+                if(itemsnp.get(i).getType().equals("Игра")) k++;
+            }
+            namesnp = new String[k];
+            k = 0;
+            for(int i = 0;i < itemsnp.size();i++)
+            {
+                if(itemsnp.get(i).getType().equals("Игра")) {
+                    namesnp[k] = itemsnp.get(i).getName();
+                    k++;
+                }
+            }
         }
         adapternp = new ArrayAdapter<>(this, R.layout.list_item, namesnp);
         lvnp.setAdapter(adapternp);
@@ -269,10 +396,10 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == 0) {
             if (resultCode == -2) {
                 if (data.getStringExtra("ch").equals("1")) {
-                    itemsp.add(new Item(data.getStringExtra("name"), Double.parseDouble(data.getStringExtra("myRate")), Double.parseDouble(data.getStringExtra("kpRate")), Integer.parseInt(data.getStringExtra("ch"))));
+                    itemsp.add(new Item(data.getStringExtra("name"), Double.parseDouble(data.getStringExtra("myRate")), Double.parseDouble(data.getStringExtra("kpRate")), Integer.parseInt(data.getStringExtra("ch")), data.getStringExtra("typeof")));
                     refCF();
                 } else {
-                    itemsnp.add(new Item(data.getStringExtra("name"), Double.parseDouble(data.getStringExtra("myRate")), Double.parseDouble(data.getStringExtra("kpRate")), Integer.parseInt(data.getStringExtra("ch"))));
+                    itemsnp.add(new Item(data.getStringExtra("name"), Double.parseDouble(data.getStringExtra("myRate")), Double.parseDouble(data.getStringExtra("kpRate")), Integer.parseInt(data.getStringExtra("ch")), data.getStringExtra("typeof")));
                     refNCF();
                 }
                 SQLiteDatabase dataBase = dbHelper.getWritableDatabase();
@@ -282,6 +409,7 @@ public class MainActivity extends AppCompatActivity {
                 contentValues.put("kpRate", data.getStringExtra("kpRate"));
                 contentValues.put("ch", data.getStringExtra("ch"));
                 contentValues.put("myRate", data.getStringExtra("myRate"));
+                contentValues.put("type", data.getStringExtra("typeof"));
                 dataBase.insert("films", null, contentValues);
             } else Toast.makeText(MainActivity.this, "Не создано", Toast.LENGTH_SHORT).show();
         }
@@ -316,6 +444,7 @@ public class MainActivity extends AppCompatActivity {
                 contentValues.put("kpRate", data.getStringExtra("kpRate"));
                 contentValues.put("ch", data.getStringExtra("ch"));
                 contentValues.put("myRate", data.getStringExtra("myRate"));
+                contentValues.put("type", data.getStringExtra("type"));
                 Log.d("mLogs", data.getStringExtra("oldname"));
                 dataBase.update("films", contentValues, "name=?", new String[]{data.getStringExtra("oldname")});
                 //deleteFile(data.getStringExtra("oldname"));
@@ -333,7 +462,7 @@ public class MainActivity extends AppCompatActivity {
                                     data.getStringExtra("name"),
                                     Double.parseDouble(data.getStringExtra("myRate")),
                                     Double.parseDouble(data.getStringExtra("kpRate")),
-                                    Integer.parseInt(data.getStringExtra("ch"))));
+                                    Integer.parseInt(data.getStringExtra("ch")), data.getStringExtra("type")));
                     refCF();
                 }
                 else{
@@ -342,7 +471,7 @@ public class MainActivity extends AppCompatActivity {
                         refCF();
                     }
                     else itemsnp.remove(Integer.parseInt(data.getStringExtra("position")));
-                    itemsnp.add(Integer.parseInt(data.getStringExtra("position")), new Item(data.getStringExtra("name"), Double.parseDouble(data.getStringExtra("myRate")), Double.parseDouble(data.getStringExtra("kpRate")), Integer.parseInt(data.getStringExtra("ch"))));
+                    itemsnp.add(Integer.parseInt(data.getStringExtra("position")), new Item(data.getStringExtra("name"), Double.parseDouble(data.getStringExtra("myRate")), Double.parseDouble(data.getStringExtra("kpRate")), Integer.parseInt(data.getStringExtra("ch")), data.getStringExtra("type")));
                     refNCF();
                 }
             }
