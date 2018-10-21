@@ -159,14 +159,13 @@ public class EditActivity extends AppCompatActivity {
                             intent.putExtra("myRate", "0");
                         }
                         intent.putExtra("kpRate", kpRate.getText().toString());
-
+                        intent.putExtra("typeof", type.getText().toString().trim());
                         if (edit) {
                             intent.putExtra("oldname", oldname);
                             intent.putExtra("oldch", oldch);
                             intent.putExtra("position", pos);
                             Log.d("mLogs", pos);
                         }
-                        intent.putExtra("typeof", type.getText().toString().trim());
                         if (check && myRate.getText().length() == 0)
                             return false;
                         else {

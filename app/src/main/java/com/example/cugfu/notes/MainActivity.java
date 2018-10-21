@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private int cPos;
     private boolean flag = false;
     private BottomNavigationView bnv;
-    private String type = "films";
+    private String type = "Фильм";
     private Toolbar tb;
 
     private final int MENU_EDIT = 1, MENU_DELETE = 2;
@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
             tb.setTitle("Книги");
             bnv.getMenu().getItem(0).setTitle("Непрочитанные");
             bnv.getMenu().getItem(1).setTitle("Прочитанные");
-            type = "books";
+            type = "Книга";
             refCF();
             refNCF();
             return true;
@@ -246,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
            tb.setTitle("Фильмы");
            bnv.getMenu().getItem(0).setTitle("Непросмотренные");
            bnv.getMenu().getItem(1).setTitle("Просмотренные");
-           type = "films";
+           type = "Фильм";
            refCF();
            refNCF();
            return true;
@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
            tb.setTitle("Игры");
            bnv.getMenu().getItem(0).setTitle("Непройденные");
            bnv.getMenu().getItem(1).setTitle("Пройденные");
-           type = "games";
+           type = "Игра";
            refCF();
            refNCF();
            return true;
@@ -270,7 +270,7 @@ public class MainActivity extends AppCompatActivity {
     public void refCF()
     {
         String[] namesp = null;
-        if(type.equals("films"))
+        if(type.equals("Фильм"))
         {
             int k = 0;
             for(int i = 0;i < itemsp.size();i++)
@@ -287,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        if(type.equals("books"))
+        if(type.equals("Книга"))
         {
             int k = 0;
             for(int i = 0;i < itemsp.size();i++)
@@ -304,7 +304,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        if(type.equals("games"))
+        if(type.equals("Игра"))
         {
             int k = 0;
             for(int i = 0;i < itemsp.size();i++)
@@ -330,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
     public void refNCF()
     {
         String[] namesnp = null;
-        if(type.equals("films"))
+        if(type.equals("Фильм"))
         {
             int k = 0;
             for(int i = 0;i < itemsnp.size();i++)
@@ -347,7 +347,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        if(type.equals("books"))
+        if(type.equals("Книга"))
         {
             int k = 0;
             for(int i = 0;i < itemsnp.size();i++)
@@ -364,7 +364,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        if(type.equals("games"))
+        if(type.equals("Игра"))
         {
             int k = 0;
             for(int i = 0;i < itemsnp.size();i++)
@@ -462,7 +462,7 @@ public class MainActivity extends AppCompatActivity {
                                     data.getStringExtra("name"),
                                     Double.parseDouble(data.getStringExtra("myRate")),
                                     Double.parseDouble(data.getStringExtra("kpRate")),
-                                    Integer.parseInt(data.getStringExtra("ch")), data.getStringExtra("type")));
+                                    Integer.parseInt(data.getStringExtra("ch")), data.getStringExtra("typeof")));
                     refCF();
                 }
                 else{
@@ -471,7 +471,7 @@ public class MainActivity extends AppCompatActivity {
                         refCF();
                     }
                     else itemsnp.remove(Integer.parseInt(data.getStringExtra("position")));
-                    itemsnp.add(Integer.parseInt(data.getStringExtra("position")), new Item(data.getStringExtra("name"), Double.parseDouble(data.getStringExtra("myRate")), Double.parseDouble(data.getStringExtra("kpRate")), Integer.parseInt(data.getStringExtra("ch")), data.getStringExtra("type")));
+                    itemsnp.add(Integer.parseInt(data.getStringExtra("position")), new Item(data.getStringExtra("name"), Double.parseDouble(data.getStringExtra("myRate")), Double.parseDouble(data.getStringExtra("kpRate")), Integer.parseInt(data.getStringExtra("ch")), data.getStringExtra("typeof")));
                     refNCF();
                 }
             }

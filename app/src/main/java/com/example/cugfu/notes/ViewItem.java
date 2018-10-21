@@ -82,15 +82,15 @@ public class ViewItem extends AppCompatActivity {
 
         if(ch)
         {
-            if(cath.equals("films"))menu.add(Menu.NONE, is_ch, Menu.NONE, "Отметить как непросмотренное");
-            if(cath.equals("games"))menu.add(Menu.NONE, is_ch, Menu.NONE, "Отметить как непройденное");
-            if(cath.equals("books"))menu.add(Menu.NONE, is_ch, Menu.NONE, "Отметить как непрочитанное");
+            if(cath.equals("Фильм"))menu.add(Menu.NONE, is_ch, Menu.NONE, "Отметить как непросмотренное");
+            if(cath.equals("Игра"))menu.add(Menu.NONE, is_ch, Menu.NONE, "Отметить как непройденное");
+            if(cath.equals("Книга"))menu.add(Menu.NONE, is_ch, Menu.NONE, "Отметить как непрочитанное");
         }
         else
         {
-            if(cath.equals("films"))menu.add(Menu.NONE, is_ch, Menu.NONE, "Отметить как просмотренное");
-            if(cath.equals("games"))menu.add(Menu.NONE, is_ch, Menu.NONE, "Отметить как пройденное");
-            if(cath.equals("books"))menu.add(Menu.NONE, is_ch, Menu.NONE, "Отметить как прочитанное");
+            if(cath.equals("Фильм"))menu.add(Menu.NONE, not_ch, Menu.NONE, "Отметить как просмотренное");
+            if(cath.equals("Игра"))menu.add(Menu.NONE, not_ch, Menu.NONE, "Отметить как пройденное");
+            if(cath.equals("Книга"))menu.add(Menu.NONE, not_ch, Menu.NONE, "Отметить как прочитанное");
         }
         return true;
     }
@@ -130,6 +130,7 @@ public class ViewItem extends AppCompatActivity {
             intent.putExtra("kpRate", RateKp.getText().toString());
             intent.putExtra("myRate", RateMy.getText().toString());
             intent.putExtra("ch", "0");
+            intent.putExtra("typeof", cath);
             intent.putExtra("position", pos + "");
             setResult(-2, intent);
             finish();
@@ -153,6 +154,7 @@ public class ViewItem extends AppCompatActivity {
                         intent.putExtra("myRate", Double.parseDouble(oz) + "");
                         intent.putExtra("kpRate", RateKp.getText().toString());
                         intent.putExtra("ch", "1");
+                        intent.putExtra("typeof", cath);
                         intent.putExtra("position", pos + "");
                         setResult(-2, intent);
                         finish();
@@ -183,7 +185,7 @@ public class ViewItem extends AppCompatActivity {
             intent.putExtra("myRate", data.getStringExtra("myRate"));
             intent.putExtra("ch", data.getStringExtra("ch"));
             intent.putExtra("position", pos + "");
-            intent.putExtra("type", data.getStringExtra("type"));
+            intent.putExtra("typeof", data.getStringExtra("type"));
             setResult(-2, intent);
             finish();
         }
