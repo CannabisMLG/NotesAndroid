@@ -325,26 +325,17 @@ public class MainActivity extends AppCompatActivity {
         lvp.setAdapter(adapterp);
     }
     /**
-     * Метод, обновляющий данные в списке просмотренных фильмов
+     * Метод, обновляющий данные в списке непросмотренных фильмов
      */
     public void refNCF()
     {
-        String[] namesnp = null;
+        LinkedList<Item> namesnp = null;
         if(type.equals("Фильм"))
         {
             int k = 0;
             for(int i = 0;i < itemsnp.size();i++)
             {
-                if(itemsnp.get(i).getType().equals("Фильм")) k++;
-            }
-            namesnp = new String[k];
-            k = 0;
-            for(int i = 0;i < itemsnp.size();i++)
-            {
-                if(itemsnp.get(i).getType().equals("Фильм")) {
-                    namesnp[k] = itemsnp.get(i).getName();
-                    k++;
-                }
+                if(itemsnp.get(i).getType().equals("Фильм")) namesnp.add(itemsnp.get(i));
             }
         }
         if(type.equals("Книга"))
@@ -352,16 +343,7 @@ public class MainActivity extends AppCompatActivity {
             int k = 0;
             for(int i = 0;i < itemsnp.size();i++)
             {
-                if(itemsnp.get(i).getType().equals("Книга")) k++;
-            }
-            namesnp = new String[k];
-            k = 0;
-            for(int i = 0;i < itemsnp.size();i++)
-            {
-                if(itemsnp.get(i).getType().equals("Книга")) {
-                    namesnp[k] = itemsnp.get(i).getName();
-                    k++;
-                }
+                if(itemsnp.get(i).getType().equals("Книга")) namesnp.add(itemsnp.get(i));
             }
         }
         if(type.equals("Игра"))
@@ -369,19 +351,10 @@ public class MainActivity extends AppCompatActivity {
             int k = 0;
             for(int i = 0;i < itemsnp.size();i++)
             {
-                if(itemsnp.get(i).getType().equals("Игра")) k++;
-            }
-            namesnp = new String[k];
-            k = 0;
-            for(int i = 0;i < itemsnp.size();i++)
-            {
-                if(itemsnp.get(i).getType().equals("Игра")) {
-                    namesnp[k] = itemsnp.get(i).getName();
-                    k++;
-                }
+                if(itemsnp.get(i).getType().equals("Игра")) namesnp.add(itemsnp.get(i));
             }
         }
-        adapternp = new ArrayAdapter<>(this, R.layout.list_item, namesnp);
+        adapternp = new ItemAdapter(this, namesnp);
         lvnp.setAdapter(adapternp);
     }
 
