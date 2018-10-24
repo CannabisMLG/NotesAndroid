@@ -27,7 +27,7 @@ import java.io.FileReader;
 import java.io.InputStreamReader;
 
 public class ViewItem extends AppCompatActivity {
-    private TextView viewNote, RateKp, myRate, RateMy;
+    private TextView viewNote, RateKp, myRate, RateMy, kpRate;
     private String name, pos, oz;
     private boolean ch = false;
     private DBhelper db;
@@ -48,6 +48,7 @@ public class ViewItem extends AppCompatActivity {
         RateKp = (TextView) findViewById(R.id.RateKp);
         myRate = (TextView) findViewById(R.id.myRate);
         RateMy = (TextView) findViewById(R.id.RateMy);
+        kpRate = (TextView) findViewById(R.id.kpRate);
         try {
             BufferedReader rd = new BufferedReader(new InputStreamReader(openFileInput(intent.getStringExtra("name"))));
             String s = "";
@@ -73,6 +74,11 @@ public class ViewItem extends AppCompatActivity {
         name = intent.getStringExtra("name");
         pos = intent.getStringExtra("position");
         cath = intent.getStringExtra("cath");
+        if(!cath.equals("Фильм"))
+        {
+            kpRate.setVisibility(View.INVISIBLE);
+            RateKp.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override

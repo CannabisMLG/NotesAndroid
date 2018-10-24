@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -126,12 +127,15 @@ public class MainActivity extends AppCompatActivity {
         lvnp.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int pos = 0;
+                for(int i = 0;i < itemsnp.size(); i++)
+                    if(itemsnp.get(i).getName().equals(((TextView)view.findViewById(R.id.it)).getText())) pos = i;
                 Intent intent = new Intent(th, ViewItem.class);
-                intent.putExtra("name", itemsnp.get(position).getName());
-                intent.putExtra("myRate", itemsnp.get(position).getMyRate());
-                intent.putExtra("kpRate", itemsnp.get(position).getKpRate());
-                intent.putExtra("ch", itemsnp.get(position).isCh());
-                intent.putExtra("position", position+"");
+                intent.putExtra("name", itemsnp.get(pos).getName());
+                intent.putExtra("myRate", itemsnp.get(pos).getMyRate());
+                intent.putExtra("kpRate", itemsnp.get(pos).getKpRate());
+                intent.putExtra("ch", itemsnp.get(pos).isCh());
+                intent.putExtra("position", pos+"");
                 intent.putExtra("cath", type);
                 startActivityForResult(intent, 1);
             }
@@ -139,12 +143,15 @@ public class MainActivity extends AppCompatActivity {
         lvp.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int pos = 0;
+                for(int i = 0;i < itemsp.size(); i++)
+                    if(itemsp.get(i).getName().equals(((TextView)view.findViewById(R.id.it)).getText())) pos = i;
                 Intent intent = new Intent(th, ViewItem.class);
-                intent.putExtra("name", itemsp.get(position).getName());
-                intent.putExtra("myRate", itemsp.get(position).getMyRate());
-                intent.putExtra("kpRate", itemsp.get(position).getKpRate());
-                intent.putExtra("ch", itemsp.get(position).isCh());
-                intent.putExtra("position", position+"");
+                intent.putExtra("name", itemsp.get(pos).getName());
+                intent.putExtra("myRate", itemsp.get(pos).getMyRate());
+                intent.putExtra("kpRate", itemsp.get(pos).getKpRate());
+                intent.putExtra("ch", itemsp.get(pos).isCh());
+                intent.putExtra("position", pos+"");
                 intent.putExtra("cath", type);
                 startActivityForResult(intent, 1);
             }
@@ -269,59 +276,29 @@ public class MainActivity extends AppCompatActivity {
      */
     public void refCF()
     {
-        String[] namesp = null;
+        LinkedList<Item> names = new LinkedList<>();
         if(type.equals("Фильм"))
         {
-            int k = 0;
             for(int i = 0;i < itemsp.size();i++)
             {
-                if(itemsp.get(i).getType().equals("Фильм")) k++;
-            }
-            namesp = new String[k];
-            k = 0;
-            for(int i = 0;i < itemsp.size();i++)
-            {
-                if(itemsp.get(i).getType().equals("Фильм")) {
-                    namesp[k] = itemsp.get(i).getName();
-                    k++;
-                }
+                if(itemsp.get(i).getType().equals("Фильм")) names.add(itemsp.get(i));
             }
         }
         if(type.equals("Книга"))
         {
-            int k = 0;
             for(int i = 0;i < itemsp.size();i++)
             {
-                if(itemsp.get(i).getType().equals("Книга")) k++;
-            }
-            namesp = new String[k];
-            k = 0;
-            for(int i = 0;i < itemsp.size();i++)
-            {
-                if(itemsp.get(i).getType().equals("Книга")) {
-                    namesp[k] = itemsp.get(i).getName();
-                    k++;
-                }
+                if(itemsp.get(i).getType().equals("Книга")) names.add(itemsp.get(i));
             }
         }
         if(type.equals("Игра"))
         {
-            int k = 0;
             for(int i = 0;i < itemsp.size();i++)
             {
-                if(itemsp.get(i).getType().equals("Игра")) k++;
-            }
-            namesp = new String[k];
-            k = 0;
-            for(int i = 0;i < itemsp.size();i++)
-            {
-                if(itemsp.get(i).getType().equals("Игра")) {
-                    namesp[k] = itemsp.get(i).getName();
-                    k++;
-                }
+                if(itemsp.get(i).getType().equals("Игра")) names.add(itemsp.get(i));
             }
         }
-        adapterp = new ArrayAdapter<>(this, R.layout.list_item, namesp);
+        adapterp = new ItemAdapter(this, names);
         lvp.setAdapter(adapterp);
     }
     /**
@@ -329,32 +306,29 @@ public class MainActivity extends AppCompatActivity {
      */
     public void refNCF()
     {
-        LinkedList<Item> namesnp = null;
+        LinkedList<Item> names = new LinkedList<>();
         if(type.equals("Фильм"))
         {
-            int k = 0;
             for(int i = 0;i < itemsnp.size();i++)
             {
-                if(itemsnp.get(i).getType().equals("Фильм")) namesnp.add(itemsnp.get(i));
+                if(itemsnp.get(i).getType().equals("Фильм")) names.add(itemsnp.get(i));
             }
         }
         if(type.equals("Книга"))
         {
-            int k = 0;
             for(int i = 0;i < itemsnp.size();i++)
             {
-                if(itemsnp.get(i).getType().equals("Книга")) namesnp.add(itemsnp.get(i));
+                if(itemsnp.get(i).getType().equals("Книга")) names.add(itemsnp.get(i));
             }
         }
         if(type.equals("Игра"))
         {
-            int k = 0;
             for(int i = 0;i < itemsnp.size();i++)
             {
-                if(itemsnp.get(i).getType().equals("Игра")) namesnp.add(itemsnp.get(i));
+                if(itemsnp.get(i).getType().equals("Игра")) names.add(itemsnp.get(i));
             }
         }
-        adapternp = new ItemAdapter(this, namesnp);
+        adapternp = new ItemAdapter(this, names);
         lvnp.setAdapter(adapternp);
     }
 
@@ -430,7 +404,7 @@ public class MainActivity extends AppCompatActivity {
                         itemsnp.remove(Integer.parseInt(data.getStringExtra("position")));
                         refNCF();
                     }
-                    itemsp.add(Integer.parseInt(data.getStringExtra("position")),
+                    itemsp.add(
                             new Item(
                                     data.getStringExtra("name"),
                                     Double.parseDouble(data.getStringExtra("myRate")),
