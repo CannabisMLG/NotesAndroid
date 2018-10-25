@@ -27,18 +27,7 @@ public class ItemAdapter extends ArrayAdapter {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item, null);
         }
         ((TextView) convertView.findViewById(R.id.it)).setText(item.getName());
-        if(item.getType().equals("Фильм")){
-            if(item.isCh().equals("1"))((TextView) convertView.findViewById(R.id.textView7)).setText("Моя оценка: " + item.getMyRate());
-            else ((TextView) convertView.findViewById(R.id.textView7)).setText("Оценка на кинопоиске: " + item.getKpRate());
-        }
-        if(item.getType().equals("Книга")){
-            if(item.isCh().equals("1"))((TextView) convertView.findViewById(R.id.textView7)).setText("Моя оценка: " + item.getMyRate());
-            else ((TextView) convertView.findViewById(R.id.textView7)).setText("");
-        }
-        if(item.getType().equals("Игра")){
-            if(item.isCh().equals("1"))((TextView) convertView.findViewById(R.id.textView7)).setText("Моя оценка: " + item.getMyRate());
-            else ((TextView) convertView.findViewById(R.id.textView7)).setText("");
-        }
+        ((TextView) convertView.findViewById(R.id.textView7)).setText(item.getGenre());
         return convertView;
     }
 }

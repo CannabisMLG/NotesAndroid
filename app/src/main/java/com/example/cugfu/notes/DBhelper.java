@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 
 public class DBhelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
 
 
     public DBhelper(Context context) {
@@ -17,7 +17,7 @@ public class DBhelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table films(`_id` integer primary key autoincrement," +
-                "`name` text, `kpRate` text, `ch` integer, `myRate` text, `type` text);");
+                "`name` text, `kpRate` text, `ch` integer, `myRate` text, `type` text, `genre` text);");
     }
 
     @Override

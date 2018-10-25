@@ -27,8 +27,8 @@ import java.io.FileReader;
 import java.io.InputStreamReader;
 
 public class ViewItem extends AppCompatActivity {
-    private TextView viewNote, RateKp, myRate, RateMy, kpRate;
-    private String name, pos, oz;
+    private TextView viewNote, RateKp, myRate, RateMy, kpRate, genre;
+    private String name, pos, oz, genreText;
     private boolean ch = false;
     private DBhelper db;
     private final int is_ch = -5500, not_ch = -5550;
@@ -46,6 +46,7 @@ public class ViewItem extends AppCompatActivity {
 
         viewNote = (TextView) findViewById(R.id.viewNote);
         RateKp = (TextView) findViewById(R.id.RateKp);
+        genre = (TextView) findViewById(R.id.textGenre);
         myRate = (TextView) findViewById(R.id.myRate);
         RateMy = (TextView) findViewById(R.id.RateMy);
         kpRate = (TextView) findViewById(R.id.kpRate);
@@ -63,6 +64,7 @@ public class ViewItem extends AppCompatActivity {
         }
 
         RateKp.setText(intent.getStringExtra("kpRate"));
+        genre.setText(genre.getText() + " " + intent.getStringExtra("genre"));
 
         if(intent.getStringExtra("ch").equals("1"))
         {
@@ -74,6 +76,7 @@ public class ViewItem extends AppCompatActivity {
         name = intent.getStringExtra("name");
         pos = intent.getStringExtra("position");
         cath = intent.getStringExtra("cath");
+        genreText = intent.getStringExtra("genre");
         if(!cath.equals("Фильм"))
         {
             kpRate.setVisibility(View.INVISIBLE);
@@ -135,6 +138,7 @@ public class ViewItem extends AppCompatActivity {
             intent.putExtra("name", name);
             intent.putExtra("kpRate", RateKp.getText().toString());
             intent.putExtra("myRate", RateMy.getText().toString());
+            intent.putExtra("genre", genreText);
             intent.putExtra("ch", "0");
             intent.putExtra("typeof", cath);
             intent.putExtra("position", pos + "");
@@ -159,6 +163,7 @@ public class ViewItem extends AppCompatActivity {
                         intent.putExtra("name", name);
                         intent.putExtra("myRate", Double.parseDouble(oz) + "");
                         intent.putExtra("kpRate", RateKp.getText().toString());
+                        intent.putExtra("genre", genreText);
                         intent.putExtra("ch", "1");
                         intent.putExtra("typeof", cath);
                         intent.putExtra("position", pos + "");
@@ -191,6 +196,7 @@ public class ViewItem extends AppCompatActivity {
             intent.putExtra("myRate", data.getStringExtra("myRate"));
             intent.putExtra("ch", data.getStringExtra("ch"));
             intent.putExtra("position", pos + "");
+            intent.putExtra("genre", data.getStringExtra("genre"));
             intent.putExtra("typeof", data.getStringExtra("type"));
             setResult(-2, intent);
             finish();

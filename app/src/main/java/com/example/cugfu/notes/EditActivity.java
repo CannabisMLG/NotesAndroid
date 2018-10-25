@@ -23,7 +23,7 @@ import java.io.OutputStreamWriter;
 
 public class EditActivity extends AppCompatActivity {
 
-    private EditText name, note, kpRate, myRate, type;
+    private EditText name, note, kpRate, myRate, type, genre;
     private CheckBox ch;
     private TextView textView, kpRatet;
     private String oldname, oldch, pos;
@@ -56,6 +56,7 @@ public class EditActivity extends AppCompatActivity {
         kpRatet = (TextView) findViewById(R.id.textView3);
         myRate = (EditText) findViewById(R.id.editTextmyRate);
         type = (EditText) findViewById(R.id.editType);
+        genre = (EditText) findViewById(R.id.editGenre);
         ch = (CheckBox) findViewById(R.id.checkBox);
         textView = (TextView) findViewById(R.id.textView4);
         ch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -139,7 +140,7 @@ public class EditActivity extends AppCompatActivity {
             Intent intent = new Intent();
             if(type.getText().toString().trim().equals("Фильм")||type.getText().toString().trim().equals("Игра")||type.getText().toString().trim().equals("Книга"))
             {
-                if (name.getText().length() != 0 && note.getText().length() != 0 && kpRate.getText().length() != 0) {
+                if (name.getText().length() != 0 && note.getText().length() != 0 && kpRate.getText().length() != 0 && genre.getText().length() != 0) {
                     if (myRate.getText().length() != 0 && Double.parseDouble(myRate.getText().toString()) <= 10 && Double.parseDouble(kpRate.getText().toString()) <= 10) {
                         intent.putExtra("name", name.getText().toString().trim());
                         try {
@@ -160,6 +161,7 @@ public class EditActivity extends AppCompatActivity {
                         }
                         intent.putExtra("kpRate", kpRate.getText().toString());
                         intent.putExtra("typeof", type.getText().toString().trim());
+                        intent.putExtra("genre", genre.getText().toString().trim());
                         if (edit) {
                             intent.putExtra("oldname", oldname);
                             intent.putExtra("oldch", oldch);

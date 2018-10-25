@@ -17,6 +17,16 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:layout_marginTop="10dp"
+                android:text="Тип:"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
             <EditText
                 android:id="@+id/editType"
                 android:layout_width="match_parent"
@@ -48,6 +58,27 @@
                 android:layout_marginRight="7dp"
                 android:ems="10"
                 android:hint="Название"
+                android:inputType="textPersonName" />
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:layout_marginTop="10dp"
+                android:text="Жанр:"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/editGenre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="7dp"
+                android:ems="10"
+                android:hint="Жанр"
                 android:inputType="textPersonName" />
 
             <TextView

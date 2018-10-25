@@ -106,14 +106,15 @@ public class MainActivity extends AppCompatActivity {
             int idCh = cursor.getColumnIndex("ch");
             int idmyRate = cursor.getColumnIndex("myRate");
             int idType = cursor.getColumnIndex("type");
+            int idGenre = cursor.getColumnIndex("genre");
             do {
                 if(cursor.getString(idCh).equals("1"))
                 {
-                    itemsp.add(new Item(cursor.getString(idName), Double.parseDouble(cursor.getString(idmyRate)), Double.parseDouble(cursor.getString(idkpRate)),cursor.getInt(idCh), cursor.getString(idType)));
+                    itemsp.add(new Item(cursor.getString(idName), Double.parseDouble(cursor.getString(idmyRate)), Double.parseDouble(cursor.getString(idkpRate)),cursor.getInt(idCh), cursor.getString(idType), cursor.getString(idGenre)));
                 }
                 else
                 {
-                    itemsnp.add(new Item(cursor.getString(idName), Double.parseDouble(cursor.getString(idmyRate)), Double.parseDouble(cursor.getString(idkpRate)),cursor.getInt(idCh), cursor.getString(idType)));
+                    itemsnp.add(new Item(cursor.getString(idName), Double.parseDouble(cursor.getString(idmyRate)), Double.parseDouble(cursor.getString(idkpRate)),cursor.getInt(idCh), cursor.getString(idType), cursor.getString(idGenre)));
                     Log.d("mLog", cursor.getString(idType));
                 }
             }while(cursor.moveToNext());
@@ -136,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("kpRate", itemsnp.get(pos).getKpRate());
                 intent.putExtra("ch", itemsnp.get(pos).isCh());
                 intent.putExtra("position", pos+"");
+                intent.putExtra("genre", itemsnp.get(pos).getGenre());
                 intent.putExtra("cath", type);
                 startActivityForResult(intent, 1);
             }
@@ -152,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("kpRate", itemsp.get(pos).getKpRate());
                 intent.putExtra("ch", itemsp.get(pos).isCh());
                 intent.putExtra("position", pos+"");
+                intent.putExtra("genre", itemsp.get(pos).getGenre());
                 intent.putExtra("cath", type);
                 startActivityForResult(intent, 1);
             }
@@ -343,10 +346,10 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == 0) {
             if (resultCode == -2) {
                 if (data.getStringExtra("ch").equals("1")) {
-                    itemsp.add(new Item(data.getStringExtra("name"), Double.parseDouble(data.getStringExtra("myRate")), Double.parseDouble(data.getStringExtra("kpRate")), Integer.parseInt(data.getStringExtra("ch")), data.getStringExtra("typeof")));
+                    itemsp.add(new Item(data.getStringExtra("name"), Double.parseDouble(data.getStringExtra("myRate")), Double.parseDouble(data.getStringExtra("kpRate")), Integer.parseInt(data.getStringExtra("ch")), data.getStringExtra("typeof"), data.getStringExtra("genre")));
                     refCF();
                 } else {
-                    itemsnp.add(new Item(data.getStringExtra("name"), Double.parseDouble(data.getStringExtra("myRate")), Double.parseDouble(data.getStringExtra("kpRate")), Integer.parseInt(data.getStringExtra("ch")), data.getStringExtra("typeof")));
+                    itemsnp.add(new Item(data.getStringExtra("name"), Double.parseDouble(data.getStringExtra("myRate")), Double.parseDouble(data.getStringExtra("kpRate")), Integer.parseInt(data.getStringExtra("ch")), data.getStringExtra("typeof"), data.getStringExtra("genre")));
                     refNCF();
                 }
                 SQLiteDatabase dataBase = dbHelper.getWritableDatabase();
@@ -357,6 +360,7 @@ public class MainActivity extends AppCompatActivity {
                 contentValues.put("ch", data.getStringExtra("ch"));
                 contentValues.put("myRate", data.getStringExtra("myRate"));
                 contentValues.put("type", data.getStringExtra("typeof"));
+                contentValues.put("genre", data.getStringExtra("genre"));
                 dataBase.insert("films", null, contentValues);
             } else Toast.makeText(MainActivity.this, "Не создано", Toast.LENGTH_SHORT).show();
         }
@@ -392,6 +396,7 @@ public class MainActivity extends AppCompatActivity {
                 contentValues.put("ch", data.getStringExtra("ch"));
                 contentValues.put("myRate", data.getStringExtra("myRate"));
                 contentValues.put("type", data.getStringExtra("type"));
+                contentValues.put("genre", data.getStringExtra("genre"));
                 Log.d("mLogs", data.getStringExtra("oldname"));
                 dataBase.update("films", contentValues, "name=?", new String[]{data.getStringExtra("oldname")});
                 //deleteFile(data.getStringExtra("oldname"));
@@ -409,7 +414,8 @@ public class MainActivity extends AppCompatActivity {
                                     data.getStringExtra("name"),
                                     Double.parseDouble(data.getStringExtra("myRate")),
                                     Double.parseDouble(data.getStringExtra("kpRate")),
-                                    Integer.parseInt(data.getStringExtra("ch")), data.getStringExtra("typeof")));
+                                    Integer.parseInt(data.getStringExtra("ch")), data.getStringExtra("typeof"),
+                                    data.getStringExtra("genre")));
                     refCF();
                 }
                 else{
@@ -418,7 +424,7 @@ public class MainActivity extends AppCompatActivity {
                         refCF();
                     }
                     else itemsnp.remove(Integer.parseInt(data.getStringExtra("position")));
-                    itemsnp.add(Integer.parseInt(data.getStringExtra("position")), new Item(data.getStringExtra("name"), Double.parseDouble(data.getStringExtra("myRate")), Double.parseDouble(data.getStringExtra("kpRate")), Integer.parseInt(data.getStringExtra("ch")), data.getStringExtra("typeof")));
+                    itemsnp.add(Integer.parseInt(data.getStringExtra("position")), new Item(data.getStringExtra("name"), Double.parseDouble(data.getStringExtra("myRate")), Double.parseDouble(data.getStringExtra("kpRate")), Integer.parseInt(data.getStringExtra("ch")), data.getStringExtra("typeof"), data.getStringExtra("genre")));
                     refNCF();
                 }
             }
