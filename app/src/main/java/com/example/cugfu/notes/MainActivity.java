@@ -402,7 +402,7 @@ public class MainActivity extends AppCompatActivity {
                 contentValues.put("kpRate", data.getStringExtra("kpRate"));
                 contentValues.put("ch", data.getStringExtra("ch"));
                 contentValues.put("myRate", data.getStringExtra("myRate"));
-                contentValues.put("type", data.getStringExtra("type"));
+                contentValues.put("type", data.getStringExtra("typeof"));
                 contentValues.put("genre", data.getStringExtra("genre"));
                 Log.d("mLogs", data.getStringExtra("oldname"));
                 dataBase.update("films", contentValues, "name=?", new String[]{data.getStringExtra("oldname")});
