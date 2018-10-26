@@ -1,14 +1,9 @@
 package com.example.cugfu.notes;
 
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,8 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.InputStreamReader;
 
 public class ViewItem extends AppCompatActivity {
@@ -33,6 +26,11 @@ public class ViewItem extends AppCompatActivity {
     private DBhelper db;
     private final int is_ch = -5500, not_ch = -5550;
     private String cath = "";
+
+    /**
+     * Метод, выполняющийся при создании активити
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +48,10 @@ public class ViewItem extends AppCompatActivity {
         myRate = (TextView) findViewById(R.id.myRate);
         RateMy = (TextView) findViewById(R.id.RateMy);
         kpRate = (TextView) findViewById(R.id.kpRate);
+
+        /**
+         * Чтение описания из файла и добавление его в TextView
+         */
         try {
             BufferedReader rd = new BufferedReader(new InputStreamReader(openFileInput(intent.getStringExtra("name"))));
             String s = "";
@@ -66,6 +68,7 @@ public class ViewItem extends AppCompatActivity {
         RateKp.setText(intent.getStringExtra("kpRate"));
         genre.setText(genre.getText() + " " + intent.getStringExtra("genre"));
 
+        // если элемент просмотрен, то добавляем личную оценку
         if(intent.getStringExtra("ch").equals("1"))
         {
             myRate.setVisibility(View.VISIBLE);
@@ -84,6 +87,11 @@ public class ViewItem extends AppCompatActivity {
         }
     }
 
+    /**
+     * Создание меню с учетом типа элемента
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -106,12 +114,9 @@ public class ViewItem extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        //если выбрано "удалить", то активити закрывается и в MainActivity предаются команды на удаление
         if (id == R.id.action_delete) {
             Intent intent = new Intent();
             intent.putExtra("Del", "Del");
@@ -123,6 +128,8 @@ public class ViewItem extends AppCompatActivity {
             finish();
             return true;
         }
+        /*если выбрано "редактировать", то открывается EditActivity и в нем вводятся новые данные
+          об элементе*/
         if(id == R.id.action_edit)
         {
             Intent intent = new Intent(this, EditActivity.class);
@@ -130,6 +137,8 @@ public class ViewItem extends AppCompatActivity {
             intent.putExtra("type", "");
             startActivityForResult(intent, 0);
         }
+        /*если элемент был порсмотрен и нажат третий элемент меню, то обновляется элемент изменив
+            статут с "просмотренного" на "непросмотренный" */
         if(id == is_ch)
         {
             Intent intent = new Intent();
@@ -145,6 +154,9 @@ public class ViewItem extends AppCompatActivity {
             setResult(-2, intent);
             finish();
         }
+        /*если элемент был не порсмотрен и нажат третий элемент меню, то вызывается диалог для
+        оценки и обновляется элемент изменив статут с "непросмотренного" на "просмотренный"
+        и добавляется полученная оценка*/
         if(id == not_ch)
         {
             LayoutInflater li = LayoutInflater.from(this);
@@ -185,6 +197,12 @@ public class ViewItem extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Этот метод обрабатывает значения, возвращенные в случае редактирования элемента
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == -2) {

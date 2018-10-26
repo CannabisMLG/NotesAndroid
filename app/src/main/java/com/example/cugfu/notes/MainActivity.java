@@ -1,11 +1,9 @@
 package com.example.cugfu.notes;
 
-import android.content.ClipData;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,7 +22,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
 import java.util.LinkedList;
 
 import models.Item;
@@ -39,9 +35,9 @@ public class MainActivity extends AppCompatActivity {
     private ListView lvnp, lvp;
     private DBhelper dbHelper;
     private int cPos;
-    private boolean flag = false;
+    private boolean flag = false;               //flag, определяющий какой из списков сейчас активен(просмотренных/непросмотренных)
     private BottomNavigationView bnv;
-    private String type = "Фильм";
+    private String type = "Фильм";              //определяет какой тип элементов активен
     private Toolbar tb;
 
     private final int MENU_EDIT = 1, MENU_DELETE = 2;
@@ -75,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
         lvp = (ListView) findViewById(R.id.listP);
         dbHelper = new DBhelper(this);
 
+        /**
+         *  Определение BottomNavigationMenu и добавление слушателя
+         */
         bnv = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
         bnv.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -96,8 +95,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * Подключение к БД и заполнение списков просмотренных и непросмотренных элементов
+         */
         SQLiteDatabase dataBase = dbHelper.getWritableDatabase();
-
         Cursor cursor = dataBase.query("films", null,null,null,null,null,null);
         if(cursor.moveToFirst())
         {
@@ -118,13 +119,14 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("mLog", cursor.getString(idType));
                 }
             }while(cursor.moveToNext());
-
             refNCF();
             refCF();
         }
-        else Log.d("mLog", "Член");
         cursor.close();
 
+        /**
+         * подключение слушателей к ListView
+         */
         lvnp.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -235,7 +237,12 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    //@Override
+    /**
+     * метод, отвечающий за переключение списков(книги/фильмы/игры)
+     * @param item
+     * @return
+     */
+    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -275,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Метод, обновляющий данные в списке просмотренных фильмов
+     * Метод, обновляющий данные в ListView для просмотренных элементов
      */
     public void refCF()
     {
@@ -305,7 +312,7 @@ public class MainActivity extends AppCompatActivity {
         lvp.setAdapter(adapterp);
     }
     /**
-     * Метод, обновляющий данные в списке непросмотренных фильмов
+     * Метод, обновляющий данные в ListView для непросмотренных элементов
      */
     public void refNCF()
     {

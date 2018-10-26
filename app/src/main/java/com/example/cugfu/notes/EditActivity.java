@@ -7,7 +7,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -29,7 +28,10 @@ public class EditActivity extends AppCompatActivity {
     private String oldname, oldch, pos;
     private boolean edit = false, check = false;
 
-
+    /**
+     * Создание активити создания/редактирования элемента
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,13 +43,15 @@ public class EditActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        /*проверяется для чего было вызвано активити. Если для редактирования, то запоминается
+          старое имя и позиция в списке
+         */
         edit = intent.getStringExtra("type").equals("edit");
         if(edit)
         {
             oldname = intent.getStringExtra("oldname");
             oldch = intent.getStringExtra("oldch");
             pos = intent.getStringExtra("position");
-            Log.d("mLogs", pos);
         }
 
         name = (EditText) findViewById(R.id.editTextName);
@@ -59,6 +63,8 @@ public class EditActivity extends AppCompatActivity {
         genre = (EditText) findViewById(R.id.editGenre);
         ch = (CheckBox) findViewById(R.id.checkBox);
         textView = (TextView) findViewById(R.id.textView4);
+
+        //слушатель, проверяющий состояние чекбокса и меняющий вид активити в зависимости от состояния
         ch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -78,6 +84,7 @@ public class EditActivity extends AppCompatActivity {
                 }
             }
         });
+        //слушатель, вызывающий popup меню с подсказками по типам
         type.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +92,7 @@ public class EditActivity extends AppCompatActivity {
             }
         });
     }
-
+    //создание popup меню и обработка нажатий на элементы popup меню
     private void showPopupMenu(View v)
     {
         PopupMenu popupMenu = new PopupMenu(this, v);
@@ -129,22 +136,41 @@ public class EditActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Метод, обрабатывающий нажатие на кнопки в toolbar
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        //Определение нажатой кнопки
         if(item.getItemId() == android.R.id.home)
         {
             finish();
             return true;
         }
+        //если нажата не домой
         else {
             Intent intent = new Intent();
-            if(type.getText().toString().trim().equals("Фильм")||type.getText().toString().trim().equals("Игра")||type.getText().toString().trim().equals("Книга"))
+            //проверка на корректность введенного жанра
+            if(type.getText().toString().trim().equals("Фильм")||
+                    type.getText().toString().trim().equals("Игра")||
+                    type.getText().toString().trim().equals("Книга"))
             {
-                if (name.getText().length() != 0 && note.getText().length() != 0 && kpRate.getText().length() != 0 && genre.getText().length() != 0) {
-                    if (myRate.getText().length() != 0 && Double.parseDouble(myRate.getText().toString()) <= 10 && Double.parseDouble(kpRate.getText().toString()) <= 10) {
+                //проверка на заполненость всех полей
+                if (name.getText().length() != 0 &&
+                        note.getText().length() != 0 &&
+                        kpRate.getText().length() != 0 && genre.getText().length() != 0)
+                {
+                    //проверка на корректность введеной оценки
+                    if (myRate.getText().length() != 0 &&
+                            Double.parseDouble(myRate.getText().toString()) <= 10 &&
+                            Double.parseDouble(kpRate.getText().toString()) <= 10)
+                    {
                         intent.putExtra("name", name.getText().toString().trim());
                         try {
-                            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(openFileOutput(name.getText().toString().trim(), MODE_PRIVATE)));
+                            BufferedWriter bw = new BufferedWriter(
+                                    new OutputStreamWriter(openFileOutput(name.getText().toString().trim(), MODE_PRIVATE)));
                             bw.write(note.getText().toString());
                             bw.close();
                         } catch (FileNotFoundException e) {
@@ -176,16 +202,19 @@ public class EditActivity extends AppCompatActivity {
                             return true;
                         }
                     } else {
-                        Toast.makeText(EditActivity.this, "Оценка идёт по 10-ти бальной шкале", Toast.LENGTH_LONG).show();
+                        Toast.makeText(EditActivity.this,
+                                "Оценка идёт по 10-ти бальной шкале", Toast.LENGTH_LONG).show();
                         return false;
                     }
                 } else {
-                    Toast.makeText(EditActivity.this, "Заполните все поля", Toast.LENGTH_LONG).show();
+                    Toast.makeText(EditActivity.this,
+                            "Заполните все поля", Toast.LENGTH_LONG).show();
                     return false;
                 }
             }
             else {
-                Toast.makeText(EditActivity.this, "Заполните поле \"тип\" корректно", Toast.LENGTH_LONG).show();
+                Toast.makeText(EditActivity.this,
+                        "Заполните поле \"тип\" корректно", Toast.LENGTH_LONG).show();
                 return false;
             }
         }
