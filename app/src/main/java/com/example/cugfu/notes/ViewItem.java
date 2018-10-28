@@ -134,7 +134,13 @@ public class ViewItem extends AppCompatActivity {
         {
             Intent intent = new Intent(this, EditActivity.class);
             intent.putExtra("title", "Редактирование");
-            intent.putExtra("type", "");
+            intent.putExtra("oldname", name);
+            if(ch)
+                intent.putExtra("oldch", "1");
+            else
+                intent.putExtra("oldch", "0");
+            intent.putExtra("type", "edit");
+            intent.putExtra("position", pos);
             startActivityForResult(intent, 0);
         }
         /*если элемент был порсмотрен и нажат третий элемент меню, то обновляется элемент изменив
@@ -149,7 +155,7 @@ public class ViewItem extends AppCompatActivity {
             intent.putExtra("myRate", RateMy.getText().toString());
             intent.putExtra("genre", genreText);
             intent.putExtra("ch", "0");
-            intent.putExtra("typeof", cath);
+            intent.putExtra("typeof", getIntent().getStringExtra("typeof"));
             intent.putExtra("position", pos + "");
             setResult(-2, intent);
             finish();
@@ -206,17 +212,17 @@ public class ViewItem extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == -2) {
-            Intent intent = new Intent();
-            intent.putExtra("oldname", name);
-            intent.putExtra("oldch", getIntent().getStringExtra("ch"));
-            intent.putExtra("name", data.getStringExtra("name"));
-            intent.putExtra("kpRate", data.getStringExtra("kpRate"));
-            intent.putExtra("myRate", data.getStringExtra("myRate"));
-            intent.putExtra("ch", data.getStringExtra("ch"));
-            intent.putExtra("position", pos + "");
-            intent.putExtra("genre", data.getStringExtra("genre"));
-            intent.putExtra("typeof", data.getStringExtra("type"));
-            setResult(-2, intent);
+//            Intent intent = new Intent();
+//            intent.putExtra("oldname", name);
+//            intent.putExtra("oldch", getIntent().getStringExtra("ch"));
+//            intent.putExtra("name", data.getStringExtra("name"));
+//            intent.putExtra("kpRate", data.getStringExtra("kpRate"));
+//            intent.putExtra("myRate", data.getStringExtra("myRate"));
+//            intent.putExtra("ch", data.getStringExtra("ch"));
+//            intent.putExtra("position", pos + "");
+//            intent.putExtra("genre", data.getStringExtra("genre"));
+//            intent.putExtra("typeof", data.getStringExtra("type"));
+//            setResult(-2, intent);
             finish();
         }
     }

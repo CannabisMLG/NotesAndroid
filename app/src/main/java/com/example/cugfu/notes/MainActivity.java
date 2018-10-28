@@ -173,10 +173,13 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        for(int i = 0;i < itemsp.size(); i++)
+            if(itemsp.get(i).getName().equals(((TextView)v.findViewById(R.id.it)).getText())) cPos = i;
+        for(int i = 0;i < itemsnp.size(); i++)
+            if(itemsnp.get(i).getName().equals(((TextView)v.findViewById(R.id.it)).getText())) cPos = i;
         menu.add(0, MENU_EDIT, 0, "Редактировать");
         menu.add(0, MENU_DELETE, 0, "Удалить");
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        cPos = info.position;
         if(flag) {
             tItem = itemsp.get(cPos);
         }
@@ -321,21 +324,24 @@ public class MainActivity extends AppCompatActivity {
         {
             for(int i = 0;i < itemsnp.size();i++)
             {
-                if(itemsnp.get(i).getType().equals("Фильм")) names.add(itemsnp.get(i));
+                if(itemsnp.get(i).getType().equals("Фильм"))
+                    names.add(itemsnp.get(i));
             }
         }
         if(type.equals("Книга"))
         {
             for(int i = 0;i < itemsnp.size();i++)
             {
-                if(itemsnp.get(i).getType().equals("Книга")) names.add(itemsnp.get(i));
+                if(itemsnp.get(i).getType().equals("Книга"))
+                    names.add(itemsnp.get(i));
             }
         }
         if(type.equals("Игра"))
         {
             for(int i = 0;i < itemsnp.size();i++)
             {
-                if(itemsnp.get(i).getType().equals("Игра")) names.add(itemsnp.get(i));
+                if(itemsnp.get(i).getType().equals("Игра"))
+                    names.add(itemsnp.get(i));
             }
         }
         adapternp = new ItemAdapter(this, names);
@@ -411,6 +417,7 @@ public class MainActivity extends AppCompatActivity {
                 {
                     if(data.getStringExtra("oldch").equals("1")){
                         itemsp.remove(Integer.parseInt(data.getStringExtra("position")));
+                        refCF();
                     }
                     else {
                         itemsnp.remove(Integer.parseInt(data.getStringExtra("position")));
@@ -431,7 +438,7 @@ public class MainActivity extends AppCompatActivity {
                         refCF();
                     }
                     else itemsnp.remove(Integer.parseInt(data.getStringExtra("position")));
-                    itemsnp.add(Integer.parseInt(data.getStringExtra("position")), new Item(data.getStringExtra("name"), Double.parseDouble(data.getStringExtra("myRate")), Double.parseDouble(data.getStringExtra("kpRate")), Integer.parseInt(data.getStringExtra("ch")), data.getStringExtra("typeof"), data.getStringExtra("genre")));
+                    itemsnp.add(new Item(data.getStringExtra("name"), Double.parseDouble(data.getStringExtra("myRate")), Double.parseDouble(data.getStringExtra("kpRate")), Integer.parseInt(data.getStringExtra("ch")), data.getStringExtra("typeof"), data.getStringExtra("genre")));
                     refNCF();
                 }
             }
