@@ -60,7 +60,6 @@ public class ViewItem extends AppCompatActivity {
                 s += rd.readLine();
             }
             viewNote.setText(s);
-            Log.d("mLogs", "yay");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -212,17 +211,17 @@ public class ViewItem extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == -2) {
-//            Intent intent = new Intent();
-//            intent.putExtra("oldname", name);
-//            intent.putExtra("oldch", getIntent().getStringExtra("ch"));
-//            intent.putExtra("name", data.getStringExtra("name"));
-//            intent.putExtra("kpRate", data.getStringExtra("kpRate"));
-//            intent.putExtra("myRate", data.getStringExtra("myRate"));
-//            intent.putExtra("ch", data.getStringExtra("ch"));
-//            intent.putExtra("position", pos + "");
-//            intent.putExtra("genre", data.getStringExtra("genre"));
-//            intent.putExtra("typeof", data.getStringExtra("type"));
-//            setResult(-2, intent);
+            Intent intent = new Intent();
+            intent.putExtra("oldname", name);
+            intent.putExtra("oldch", getIntent().getStringExtra("ch"));
+            intent.putExtra("name", data.getStringExtra("name"));
+            intent.putExtra("kpRate", data.getStringExtra("kpRate"));
+            intent.putExtra("myRate", data.getStringExtra("myRate"));
+            intent.putExtra("ch", data.getStringExtra("ch"));
+            intent.putExtra("position", pos + "");
+            intent.putExtra("genre", data.getStringExtra("genre"));
+            intent.putExtra("typeof", data.getStringExtra("typeof"));
+            setResult(-2, intent);
             finish();
         }
     }

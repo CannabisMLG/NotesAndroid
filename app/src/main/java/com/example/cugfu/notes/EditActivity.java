@@ -192,7 +192,6 @@ public class EditActivity extends AppCompatActivity {
                             intent.putExtra("oldname", oldname);
                             intent.putExtra("oldch", oldch);
                             intent.putExtra("position", pos);
-                            Log.d("mLogs", pos);
                         }
                         if (check && myRate.getText().length() == 0)
                             return false;
