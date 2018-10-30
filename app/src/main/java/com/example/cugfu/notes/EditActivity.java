@@ -152,6 +152,10 @@ public class EditActivity extends AppCompatActivity {
         //если нажата не домой
         else {
             Intent intent = new Intent();
+            if(myRate.getText().toString().equals(".")||kpRate.getText().toString().equals(".")) {
+                Toast.makeText(this, "Введен недопустимый символ в строке оценки", Toast.LENGTH_SHORT).show();
+                return false;
+            }
             //проверка на корректность введенного жанра
             if(type.getText().toString().trim().equals("Фильм")||
                     type.getText().toString().trim().equals("Игра")||
